@@ -22,8 +22,8 @@
 
 import Foundation
 
-struct Geohash {
-    static func decode(hash: String) -> (latitude: (min: Double, max: Double), longitude: (min: Double, max: Double))? {
+public struct Geohash {
+    public static func decode(hash: String) -> (latitude: (min: Double, max: Double), longitude: (min: Double, max: Double))? {
         // For example: hash = u4pruydqqvj
         
         let bits = hash.map { bitmap[$0] ?? "?" }.joined(separator: "")
@@ -54,7 +54,7 @@ struct Geohash {
         return (latRange, lonRange)
     }
     
-    static func encode(latitude: Double, longitude: Double, length: Int) -> String {
+    public static func encode(latitude: Double, longitude: Double, length: Int) -> String {
         // For example: (latitude, longitude) = (57.6491106301546, 10.4074396938086)
         
         func combiner(array a: (min: Double, max: Double, array: [String]), value: Double) -> (Double, Double, [String]) {
@@ -100,8 +100,8 @@ struct Geohash {
     }
 }
 
-extension Geohash {
-    enum Precision: Int {
+public extension Geohash {
+    public enum Precision: Int {
         case twentyFiveHundredKilometers = 1    // ±2500 km
         case sixHundredThirtyKilometers         // ±630 km
         case seventyEightKilometers             // ±78 km
@@ -115,7 +115,7 @@ extension Geohash {
         case seventyFourMillimeters             // ±0.000074 km
     }
     
-    static func encode(latitude: Double, longitude: Double, precision: Precision) -> String {
+    public static func encode(latitude: Double, longitude: Double, precision: Precision) -> String {
         return encode(latitude: latitude, longitude: longitude, length: precision.rawValue)
     }
 }
@@ -148,8 +148,8 @@ private func << (left: [String], right: String) -> [String] {
     
     import CoreLocation
     
-    extension CLLocationCoordinate2D {
-        init(geohash: String) {
+    public extension CLLocationCoordinate2D {
+        public init(geohash: String) {
             if let (lat, lon) = Geohash.decode(hash: geohash) {
                 self = CLLocationCoordinate2DMake((lat.min + lat.max) / 2, (lon.min + lon.max) / 2)
             } else {
@@ -157,11 +157,11 @@ private func << (left: [String], right: String) -> [String] {
             }
         }
         
-        func geohash(length: Int) -> String {
+        public func geohash(length: Int) -> String {
             return Geohash.encode(latitude: latitude, longitude: longitude, length: length)
         }
         
-        func geohash(precision: Geohash.Precision) -> String {
+        public func geohash(precision: Geohash.Precision) -> String {
             return geohash(length: precision.rawValue)
         }
     }
